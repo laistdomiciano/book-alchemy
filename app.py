@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 from data_models import db, Author, Book
 import os
 
@@ -37,12 +37,12 @@ def add_book():
     return render_template('add_book.html', authors=authors)
 
 
-def create_tables():
-  try:
-    db.create_all()
-    print("Tables created successfully.")
-  except Exception as e:
-    print(f"Error creating tables: {e}")
+# def create_tables():
+#   try:
+#     db.create_all()
+#     print("Tables created successfully.")
+#   except Exception as e:
+#     print(f"Error creating tables: {e}")
 
 @app.route('/')
 def home():
@@ -78,10 +78,10 @@ def delete_book(book_id):
     return redirect(url_for('home'))
 
 
-# with app.app_context():
-#     db.create_all()
+with app.app_context():
+    db.create_all()
 
 
 if __name__ == '__main__':
-    create_tables()
+    # create_tables()
     app.run(host="0.0.0.0", port=5002, debug=True)
