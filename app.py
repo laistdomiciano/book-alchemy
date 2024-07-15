@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for
-# from flask_sqlalchemy import SQLAlchemy
 from data_models import db, Author, Book
 import os
 
@@ -17,6 +16,7 @@ def add_author():
         birth_date = request.form['birthdate']
         date_of_death = request.form['date_of_death']
         author = Author(name=name, birth_date=birth_date, date_of_death=date_of_death)
+        print(author)
         db.session.add(author)
         db.session.commit()
         return redirect(url_for('add_author'))
@@ -46,18 +46,11 @@ def add_book():
 
 @app.route('/')
 def home():
-    sort_by = request.args.get('sort_by', 'title')
-    search = request.args.get('search', '')
-
-    query = Book.query
-    if search:
-        search = f"%{search}%"
-        query = query.filter(Book.title.like(search))
-
-    if sort_by == 'author':
-        books = query.join(Author).order_by(Author.name).all()
+    search_query = request.args.get('search')
+    if search_query:
+        books = Book.query.filter(Book.title.contains(search_query)).all()
     else:
-        books = query.order_by(Book.title).all()
+        books = Book.query.all()
 
     return render_template('home.html', books=books)
 
@@ -78,8 +71,8 @@ def delete_book(book_id):
     return redirect(url_for('home'))
 
 
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 
 if __name__ == '__main__':

@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  </head>
-  <body>
+    <title>Library</title>
+</head>
+<body>
 
-    {% for book in books %}
-    <div> <h3>{{ book.title }}</h3>
-    </div>
-    {% endfor %}
+<h1>Library</h1>
 
-  </body>
+    <form action="/" method="GET">
+    <input type="text" name="search" placeholder="Search for books...">
+    <button type="submit">Search</button>
+    </form>
+
+{% for book in books %}
+<div>
+    <h3>{{ book.title }} by {{ book.author.name }}</h3>
+    <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post" style="display:inline;">
+        <button type="submit">Delete Book</button>
+    </form>
+
+</div>
+{% endfor %}
+
+</body>
 </html>
